@@ -51,6 +51,25 @@ const dropdownOpen = ref(false)
 const countrySearch = ref('')
 const submitting = ref(false)
 
+const showExitWarning = ref(false)
+
+const handleClose = () => {
+  if (showExitWarning.value) {
+    showExitWarning.value = false
+    return
+  }
+  showExitWarning.value = true
+}
+
+const confirmExit = () => {
+  showExitWarning.value = false
+  emit('close')
+}
+
+const cancelExit = () => {
+  showExitWarning.value = false
+}
+
 const form = ref({
   nombre: '',
   apellido: '',
@@ -188,7 +207,7 @@ const handleSubmit = async () => {
 
 // ── Keyboard trap ─────────────────────────────────────────────────────────────
 const onKeydown = (e: KeyboardEvent) => {
-  if (e.key === 'Escape') emit('close')
+  if (e.key === 'Escape') handleClose()
 }
 
 watch(() => props.open, (val) => {
@@ -216,12 +235,12 @@ watch(dropdownOpen, open => {
 <template>
   <Teleport to="body">
     <Transition name="rmodal-fade">
-      <div v-if="props.open" class="rmodal-overlay" @click.self="$emit('close')" role="dialog" aria-modal="true" aria-labelledby="rmodal-title">
+      <div v-if="props.open" class="rmodal-overlay" @click.self="handleClose" role="dialog" aria-modal="true" aria-labelledby="rmodal-title">
 
-        <div class="rmodal">
+        <div class="rmodal" :class="{ 'rmodal--exiting': showExitWarning }">
 
           <!-- Close -->
-          <button class="rmodal__close" @click="$emit('close')" aria-label="Cerrar">
+          <button class="rmodal__close" @click="handleClose" aria-label="Cerrar">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
@@ -394,6 +413,31 @@ watch(dropdownOpen, open => {
 
             </form>
 
+          <!-- ── EXIT WARNING ─────────────────────────────── -->
+          <Transition name="rmodal-fade">
+            <div v-if="showExitWarning" class="rmodal-exit">
+              <div class="rmodal-exit__icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+              </div>
+              <h3 class="rmodal-exit__title">¿Seguro que quieres salir?</h3>
+              <p class="rmodal-exit__sub">
+                Perderás <strong>100% tu oportunidad</strong> de obtener un sistema de ventas automatizadas.
+                Los cupos son limitados y esta ventana no volverá a mostrarse.
+              </p>
+              <button class="rmodal-exit__btn rmodal-exit__btn--primary" @click="cancelExit">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                CONTINUAR — NO PERDER MI OPORTUNIDAD
+              </button>
+              <button class="rmodal-exit__btn rmodal-exit__btn--ghost" @click="confirmExit">
+                SÍ, SALIR Y PERDER MI CUPO
+              </button>
+            </div>
+          </Transition>
+
         </div>
       </div>
     </Transition>
@@ -441,6 +485,10 @@ $text-body: rgba(255, 255, 255, 0.72);
   max-height: 92vh;
   overflow-y: auto;
 
+  &--exiting {
+    overflow: hidden;
+  }
+
   @media (max-width: 560px) {
     padding: 44px 20px 32px;
     border-radius: 20px;
@@ -460,6 +508,7 @@ $text-body: rgba(255, 255, 255, 0.72);
   color: $text-muted;
   cursor: pointer;
   display: flex;
+  z-index: 20;
   align-items: center;
   justify-content: center;
   transition: border-color 0.2s, color 0.2s, background 0.2s;
@@ -957,6 +1006,108 @@ $text-body: rgba(255, 255, 255, 0.72);
 @keyframes cta-glow {
   0%, 100% { box-shadow: 0 8px 28px rgba(colors.$BAKANO-PINK, 0.35); }
   50% { box-shadow: 0 8px 44px rgba(colors.$BAKANO-PINK, 0.6); }
+}
+
+// ── Exit warning ──────────────────────────────────────────────────────────────
+.rmodal-exit {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: $dark;
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+  padding: 80px 36px 40px;
+  justify-content: center;
+
+  @media (max-width: 560px) {
+    padding: 80px 24px 32px;
+    border-radius: 20px;
+  }
+}
+
+.rmodal-exit__icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(colors.$BAKANO-PINK, 0.1);
+  border: 2px solid rgba(colors.$BAKANO-PINK, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: colors.$BAKANO-PINK;
+  margin-bottom: 4px;
+}
+
+.rmodal-exit__title {
+  font-family: fonts.$font-principal;
+  font-size: clamp(1.3rem, 4vw, 1.6rem);
+  font-weight: 800;
+  color: colors.$white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.rmodal-exit__sub {
+  font-family: fonts.$font-secondary;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  line-height: 1.65;
+  max-width: 400px;
+
+  strong {
+    color: colors.$BAKANO-PINK;
+  }
+}
+
+.rmodal-exit__btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-family: fonts.$font-accent;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, box-shadow 0.25s ease, opacity 0.2s;
+  text-decoration: none;
+
+  &--primary {
+    color: colors.$white;
+    background: linear-gradient(135deg, colors.$BAKANO-PINK, colors.$BAKANO-PURPLE);
+    box-shadow: 0 8px 28px rgba(colors.$BAKANO-PINK, 0.35);
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 40px rgba(colors.$BAKANO-PINK, 0.5);
+    }
+
+    &:active { transform: translateY(0); }
+  }
+
+  &--ghost {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 0.72rem;
+    letter-spacing: 0.5px;
+
+    &:hover {
+      border-color: rgba(colors.$BAKANO-PINK, 0.4);
+      color: colors.$BAKANO-PINK;
+      background: rgba(colors.$BAKANO-PINK, 0.04);
+    }
+  }
 }
 
 // ── Transiciones ──────────────────────────────────────────────────────────────

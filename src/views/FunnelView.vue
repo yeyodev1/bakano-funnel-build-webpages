@@ -1,11 +1,34 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import RegistrationModal from '@/components/RegistrationModal.vue'
 import { captureFbParams } from '@/utils/fbclid'
 
 const bakanoLogo = 'https://res.cloudinary.com/dpuody0df/image/upload/v1775587085/bakano/logos/bakano-light.png'
 const luisPhoto = 'https://res.cloudinary.com/dpuody0df/image/upload/v1775587087/bakano/team/luis.webp'
+
+// ── Social proof notifications ─────────────────────────────────────────────────
+interface ProofMessage {
+  name: string
+  place: string
+  action: string
+}
+
+const proofs: ProofMessage[] = [
+  { name: 'María',   place: 'Guayaquil',     action: 'activó su tienda online con pasarela de pago' },
+  { name: 'Carlos',  place: 'Quito',         action: 'tiene su página web profesional lista' },
+  { name: 'Andrea',  place: 'Cuenca',        action: 'lanzó su e-commerce automatizado' },
+  { name: 'Roberto', place: 'Machala',       action: 'activó su sistema de ventas digital' },
+  { name: 'Fernanda',place: 'Samborondón',   action: 'tiene su tienda en línea funcionando' },
+  { name: 'Diego',   place: 'Manta',         action: 'recibe pedidos 24/7 con su web' },
+  { name: 'Valeria', place: 'Guayaquil',     action: 'automatizó sus ventas por WhatsApp' },
+  { name: 'Jorge',   place: 'Loja',          action: 'ya vende online con pasarela incluida' },
+]
+
+const currentProof = ref<ProofMessage>(proofs[0])
+const proofVisible = ref(false)
+let proofIndex = 0
+let proofTimer: ReturnType<typeof setInterval>
 
 const router = useRouter()
 const modalOpen = ref(false)
@@ -47,10 +70,26 @@ const pillars = [
   'Automatización y estandarización 24/7',
 ]
 
-// Countdown urgency timer (24h rolling)
-const hours = ref('23')
-const minutes = ref('47')
-const seconds = ref('12')
+// Countdown urgency — bloques determinísticos de 6h
+const hours = ref('05')
+const minutes = ref('59')
+const seconds = ref('59')
+
+const getRemainingInBlock = (): number => {
+  const now = new Date()
+  const blockStart = Math.floor(now.getHours() / 6) * 6
+  const blockEnd = new Date(now)
+  blockEnd.setHours(blockStart + 6, 0, 0, 0)
+  return Math.max(0, blockEnd.getTime() - now.getTime())
+}
+
+const updateCountdown = () => {
+  const remaining = getRemainingInBlock()
+  const totalSec = Math.floor(remaining / 1000)
+  hours.value   = String(Math.floor(totalSec / 3600)).padStart(2, '0')
+  minutes.value = String(Math.floor((totalSec % 3600) / 60)).padStart(2, '0')
+  seconds.value = String(totalSec % 60).padStart(2, '0')
+}
 
 let interval: ReturnType<typeof setInterval>
 
@@ -58,14 +97,23 @@ onMounted(() => {
   // Captura fbclid de la URL (llega cuando usuario hace click en anuncio Meta)
   captureFbParams()
 
-  let total = 23 * 3600 + 47 * 60 + 12
-  interval = setInterval(() => {
-    total--
-    if (total <= 0) total = 23 * 3600 + 59 * 60 + 59
-    hours.value = String(Math.floor(total / 3600)).padStart(2, '0')
-    minutes.value = String(Math.floor((total % 3600) / 60)).padStart(2, '0')
-    seconds.value = String(total % 60).padStart(2, '0')
-  }, 1000)
+  updateCountdown()
+  interval = setInterval(updateCountdown, 1000)
+
+  // Social proof — mostrar una notificación cada 8-12 segundos
+  const showProof = () => {
+    currentProof.value = proofs[proofIndex % proofs.length]
+    proofIndex++
+    proofVisible.value = true
+    setTimeout(() => { proofVisible.value = false }, 5000)
+  }
+
+  setTimeout(showProof, 3000)
+  proofTimer = setInterval(showProof, 11000)
+})
+
+onUnmounted(() => {
+  clearInterval(proofTimer)
 })
 </script>
 
@@ -84,7 +132,7 @@ onMounted(() => {
          ══════════════════════════════════════════════ -->
     <div class="funnel__urgency" role="banner">
       <span class="funnel__urgency-dot" aria-hidden="true" />
-      <span>Cupos limitados — próxima revisión en:</span>
+      <span>Cupos disponibles por tiempo limitado:</span>
       <div class="funnel__timer" aria-live="polite" aria-label="Tiempo restante">
         <span class="funnel__timer-block">
           <strong>{{ hours }}</strong>
@@ -321,6 +369,23 @@ onMounted(() => {
         </p>
       </div>
     </footer>
+
+    <!-- ── Social proof toast ───────────────────────────────────────────── -->
+    <Teleport to="body">
+      <Transition name="proof-fade">
+        <div v-if="proofVisible" class="funnel__proof">
+          <div class="funnel__proof-avatar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/>
+            </svg>
+          </div>
+          <div class="funnel__proof-body">
+            <strong>{{ currentProof.name }}</strong>
+            <span>de {{ currentProof.place }} {{ currentProof.action }}</span>
+          </div>
+        </div>
+      </Transition>
+    </Teleport>
 
   </div>
 </template>
@@ -697,6 +762,85 @@ $text-body: rgba(255, 255, 255, 0.72);
     font-size: 0.7rem;
     gap: 6px;
   }
+}
+
+// ── Social proof toast ───────────────────────────────────────────────────────
+.funnel__proof {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: rgba(15, 11, 26, 0.95);
+  border: 1px solid rgba(colors.$BAKANO-PURPLE, 0.3);
+  border-radius: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 16px 48px rgba(0,0,0,0.6);
+  max-width: 360px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  @media (max-width: 600px) {
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    max-width: none;
+    padding: 12px 14px;
+  }
+}
+
+.funnel__proof-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(colors.$BAKANO-PINK, 0.15), rgba(colors.$BAKANO-PURPLE, 0.1));
+  border: 1px solid rgba(colors.$BAKANO-PINK, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: colors.$BAKANO-PINK;
+  flex-shrink: 0;
+}
+
+.funnel__proof-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: fonts.$font-interface;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.6);
+
+  strong {
+    color: colors.$white;
+    font-weight: 700;
+  }
+
+  @media (max-width: 600px) {
+    font-size: 0.72rem;
+  }
+}
+
+.proof-fade-enter-active {
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.proof-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.proof-fade-enter-from {
+  opacity: 0;
+  transform: translateY(16px) scale(0.95);
+}
+
+.proof-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px) scale(0.97);
 }
 
 // ── Stats ─────────────────────────────────────────────────────────────────────
