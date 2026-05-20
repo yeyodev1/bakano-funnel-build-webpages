@@ -441,6 +441,11 @@ $text-body:   rgba(255, 255, 255, 0.68);
   line-height: 1.18;
   color: colors.$white;
   margin: 0;
+
+  @media (max-width: 420px) {
+    font-size: clamp(1.3rem, 5vw, 1.6rem);
+    line-height: 1.15;
+  }
 }
 
 .vv-accent {
@@ -456,6 +461,11 @@ $text-body:   rgba(255, 255, 255, 0.68);
   color: $text-body;
   line-height: 1.6;
   margin: 0;
+
+  @media (max-width: 420px) {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
 }
 
 // ── Video ─────────────────────────────────────────────────────────────────────
@@ -518,6 +528,11 @@ $text-body:   rgba(255, 255, 255, 0.68);
   font-size: 0.82rem;
   color: $text-body;
   line-height: 1.45;
+
+  @media (max-width: 420px) {
+    font-size: 0.75rem;
+    line-height: 1.35;
+  }
 }
 
 .vv-lock-notice__timer {
@@ -543,7 +558,18 @@ $text-body:   rgba(255, 255, 255, 0.68);
   border: none;
   border-radius: 12px;
   cursor: not-allowed;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: none;
   transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.3s ease, opacity 0.25s;
+
+  @media (max-width: 420px) {
+    font-size: 0.75rem;
+    padding: 14px 16px;
+    letter-spacing: 1px;
+    white-space: normal;
+    line-height: 1.3;
+  }
 
   i { font-size: 1rem; }
 

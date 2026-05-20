@@ -505,6 +505,14 @@ $text-body: rgba(255, 255, 255, 0.7);
   font-size: 0.86rem;
   color: $text-body;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: none;
+
+  @media (max-width: 480px) {
+    font-size: 0.78rem;
+    line-height: 1.35;
+  }
 }
 
 .cal-error {

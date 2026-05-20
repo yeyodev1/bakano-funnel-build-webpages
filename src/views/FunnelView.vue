@@ -341,6 +341,7 @@ $text-body: rgba(255, 255, 255, 0.72);
   background: $dark;
   color: colors.$white;
   min-height: 100vh;
+  overflow-x: clip;
 }
 
 // ── Container ────────────────────────────────────────────────────────────────
@@ -471,6 +472,12 @@ $text-body: rgba(255, 255, 255, 0.72);
   @media (max-width: 600px) {
     font-size: clamp(1.6rem, 6vw, 2.2rem);
   }
+
+  @media (max-width: 420px) {
+    font-size: clamp(1.3rem, 5vw, 1.6rem);
+    line-height: 1.15;
+    margin-bottom: 24px;
+  }
 }
 
 .funnel__headline-accent {
@@ -520,6 +527,14 @@ $text-body: rgba(255, 255, 255, 0.72);
     transparent 70%);
   pointer-events: none;
   z-index: 0;
+
+  @media (max-width: 600px) {
+    inset: -20px;
+  }
+
+  @media (max-width: 420px) {
+    inset: -10px;
+  }
 }
 
 .funnel__vsl {
@@ -631,10 +646,26 @@ $text-body: rgba(255, 255, 255, 0.72);
     padding: 16px 24px;
     font-size: 0.82rem;
     width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: none;
 
     &--large {
       padding: 18px 24px;
       font-size: 0.88rem;
+    }
+  }
+
+  @media (max-width: 420px) {
+    padding: 14px 16px;
+    font-size: 0.75rem;
+    white-space: normal;
+    line-height: 1.3;
+    gap: 8px;
+
+    &--large {
+      padding: 16px 18px;
+      font-size: 0.8rem;
     }
   }
 }
@@ -654,10 +685,17 @@ $text-body: rgba(255, 255, 255, 0.72);
   color: rgba(255, 255, 255, 0.38);
   margin: 0;
   letter-spacing: 0.2px;
+  flex-wrap: wrap;
+  text-align: center;
 
   svg {
     flex-shrink: 0;
     opacity: 0.5;
+  }
+
+  @media (max-width: 420px) {
+    font-size: 0.7rem;
+    gap: 6px;
   }
 }
 
@@ -918,6 +956,14 @@ $text-body: rgba(255, 255, 255, 0.72);
     rgba(colors.$BAKANO-PINK, 0.06) 50%,
     transparent 70%);
   pointer-events: none;
+
+  @media (max-width: 600px) {
+    inset: -30px;
+  }
+
+  @media (max-width: 420px) {
+    inset: -15px;
+  }
 }
 
 .funnel__second-cta-img {
