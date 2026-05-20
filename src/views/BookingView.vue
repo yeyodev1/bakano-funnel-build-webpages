@@ -7,7 +7,7 @@ const iframeEl = ref<HTMLIFrameElement | null>(null)
 const iframeHeight = ref(1100)
 
 const LOGO = 'https://res.cloudinary.com/dpuody0df/image/upload/v1775587085/bakano/logos/bakano-light.png'
-const BASE_URL = 'https://api.leadconnectorhq.com/widget/booking/dtpY2GCQjoOkpm8JUtYz'
+const BASE_URL = 'https://api.leadconnectorhq.com/widget/booking/J7W6KR5MIfa6QN2ROkvV'
 
 // Pre-fill calendar with stored contact data
 const calendarUrl = computed(() => {

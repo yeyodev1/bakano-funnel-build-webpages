@@ -144,6 +144,8 @@ const handleSubmit = async () => {
   // event_id compartido entre Pixel y CAPI para deduplicación
   const leadEventId = `lead_${Date.now()}_${Math.random().toString(36).slice(2)}`
 
+  const source = 'build-webpages'
+
   const payload = {
     nombre: form.value.nombre.trim(),
     apellido: form.value.apellido.trim(),
@@ -154,12 +156,14 @@ const handleSubmit = async () => {
     pais: selectedCountry.value.name,
     timestamp: new Date().toISOString(),
     event_id: leadEventId,
+    source,
+    etiquetas: [`registro-lead-${source}`, 'funnel-bakano', 'lead-capturado'],
     ...getStoredFbParams(),
   }
 
   console.info('[Bakano Registro]', payload)
 
-  await fetch('https://services.leadconnectorhq.com/hooks/pEFChujwCCaMWBNbZYD1/webhook-trigger/acf01034-9790-4a8f-a765-dfe9ae157e2d', {
+  await fetch(import.meta.env.VITE_GHL_REGISTRO_WEBHOOK, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
@@ -224,9 +228,9 @@ watch(dropdownOpen, open => {
           </button>
 
           <!-- ── FORMULARIO ─────────────────────────────────── -->
-            <p class="rmodal__eyebrow">Asesoría gratuita</p>
-            <h2 id="rmodal-title" class="rmodal__title">Agenda tu sesión<br><span class="rmodal__title-accent">sin costo</span></h2>
-            <p class="rmodal__subtitle">Cupos limitados — completa tus datos y te contactamos.</p>
+            <p class="rmodal__eyebrow">Sistema Web de Ventas</p>
+            <h2 id="rmodal-title" class="rmodal__title">Descubre cómo<br><span class="rmodal__title-accent">automatizar tus ventas</span></h2>
+            <p class="rmodal__subtitle">Inversión desde $800 — cupos limitados. Completa tus datos y te contactamos.</p>
 
             <form class="rmodal__form" @submit.prevent="handleSubmit" novalidate>
 
@@ -378,14 +382,14 @@ watch(dropdownOpen, open => {
                     <polyline points="20 6 9 17 4 12"/>
                   </svg>
                 </template>
-                {{ submitting ? 'Enviando...' : 'REGISTRARME A LA ASESORÍA' }}
+                {{ submitting ? 'Enviando...' : 'QUIERO MI SISTEMA DE VENTAS' }}
               </button>
 
               <p class="rmodal__legal">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>
-                100% gratuito · Sin compromiso · Tus datos están seguros
+                Inversión desde $800 · Sin compromiso · Tus datos están seguros
               </p>
 
             </form>

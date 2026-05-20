@@ -124,13 +124,13 @@ onUnmounted(() => {
 
       <!-- Headline -->
       <section class="vv-headline">
-        <p class="vv-eyebrow">Antes de agendar</p>
+        <p class="vv-eyebrow">Antes de invertir</p>
         <h1 class="vv-h1">
-          Mira el video &mdash; puede
-          <span class="vv-accent">transformar tu negocio</span>
+          Mira el video &mdash; conoce el
+          <span class="vv-accent">sistema de ventas automático</span>
         </h1>
         <p class="vv-subtitle">
-          Ve el video completo. Los siguientes 2 minutos pueden cambiar el rumbo de tu negocio.
+          Descubre cómo automatizar tus conversaciones en ventas 24/7. Inversión desde $800 &mdash; cupos limitados.
         </p>
       </section>
 
@@ -138,7 +138,7 @@ onUnmounted(() => {
       <div class="vv-video-wrapper">
         <div class="vv-video-ratio">
           <iframe
-            src="https://fast.wistia.net/embed/iframe/u9yljeo589?videoFoam=true"
+            src="https://fast.wistia.net/embed/iframe/36e2n5k3v9?videoFoam=true"
             title="Video Bakano"
             allow="autoplay; fullscreen"
             allowfullscreen
@@ -157,7 +157,7 @@ onUnmounted(() => {
             <span class="vv-lock-notice__text">
               El botón se habilita en
               <strong class="vv-lock-notice__timer">{{ formattedTime() }}</strong>
-              &mdash; el video tiene la clave para tu negocio
+              &mdash; el video te explica el sistema completo
             </span>
           </div>
         </Transition>
@@ -179,14 +179,14 @@ onUnmounted(() => {
             class="fa-solid fa-lock"
             aria-hidden="true"
           ></i>
-          <span v-if="ctaUnlocked">QUIERO AGENDAR MI CITA ESTRATÉGICA AHORA</span>
-          <span v-else>QUIERO AGENDAR MI CITA</span>
+          <span v-if="ctaUnlocked">QUIERO MI SISTEMA DE VENTAS AHORA</span>
+          <span v-else>QUIERO MI SISTEMA DE VENTAS</span>
         </button>
 
         <!-- Trust line -->
         <p class="vv-trust">
-          <i class="fa-solid fa-lock" aria-hidden="true"></i>
-          100% gratuito &middot; Sin compromiso &middot; Cupos limitados
+          <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+          Inversión desde $800 &middot; Resultados comprobados &middot; Cupos limitados
         </p>
 
       </div>
@@ -222,7 +222,7 @@ onUnmounted(() => {
         </div>
 
         <h2 id="cap-title" class="cap-h2">Antes de ver el video, déjanos tus datos</h2>
-        <p class="cap-sub">Lo guardamos para enviarte los recursos de la sesión</p>
+        <p class="cap-sub">Queremos conocerte para evaluar si eres el perfil ideal para nuestro sistema de ventas automático</p>
 
         <form class="cap-form" @submit.prevent="submitCapture" novalidate>
 

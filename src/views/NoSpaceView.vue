@@ -40,11 +40,13 @@ onMounted(() => {
       </div>
 
       <!-- HEADING -->
-      <h1 class="nospace__title">En este momento no tenemos espacio disponible</h1>
+      <h1 class="nospace__title">No cumples con los requisitos para nuestro sistema de ventas</h1>
 
       <p class="nospace__subtitle">
-        Lo lamentamos. Nuestros cupos de asesoría personalizada están completos.
-        Trabajamos con un número limitado de negocios para garantizar resultados reales.
+        Nuestro sistema web de ventas automatizadas está diseñado para negocios
+        que facturan más de $5,000/mes y cuentan con al menos $800 de inversión.
+        Si tu negocio no cumple estos requisitos, no te preocupes — estamos preparando
+        algo para ti.
       </p>
 
       <!-- COURSE TEASER CARD -->
@@ -54,26 +56,25 @@ onMounted(() => {
           Próximamente
         </div>
 
-        <h3 class="nospace__course-title">Aprende a hacerlo tú mismo</h3>
+        <h3 class="nospace__course-title">Curso de ventas automatizadas</h3>
 
         <p class="nospace__course-body">
-          Estamos preparando un curso completo donde te enseñaremos exactamente lo que hacemos
-          nosotros: la metodología Data Growth Business™ para que la implementes en tu negocio
-          paso a paso.
+          Estamos preparando un curso donde te enseñaremos a construir tu propio sistema
+          de ventas automatizadas paso a paso, sin depender de agencias.
         </p>
 
         <ul class="nospace__course-checks">
           <li>
             <i class="fa-solid fa-check"></i>
-            Estrategia data-driven paso a paso
+            Automatización de conversaciones y ventas
           </li>
           <li>
             <i class="fa-solid fa-check"></i>
-            Cómo abrir mercado sin depender de la viralidad
+            Infraestructura digital para vender 24/7
           </li>
           <li>
             <i class="fa-solid fa-check"></i>
-            Sistemas de ventas predecibles
+            Estandarización del proceso de captación
           </li>
         </ul>
 

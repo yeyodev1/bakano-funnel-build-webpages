@@ -14,8 +14,8 @@ const submitting = ref(false)
 const touched = ref(false)
 
 const form = ref({
-  facturacion: '',
-  ubicacion: '',
+  gestion: '',
+  inversion: '',
   objetivo: '',
   mejora: '',
   consent: false,
@@ -24,8 +24,8 @@ const form = ref({
 const wordCount = (text: string) => text.trim().split(/\s+/).filter(Boolean).length
 
 const isValid = () =>
-  !!form.value.facturacion &&
-  !!form.value.ubicacion &&
+  !!form.value.gestion &&
+  !!form.value.inversion &&
   !!form.value.objetivo &&
   wordCount(form.value.mejora) >= 15 &&
   form.value.consent
@@ -33,7 +33,7 @@ const isValid = () =>
 const IS_DEV = window.location.hostname === 'localhost'
 
 const qualifies = () => {
-  if (form.value.facturacion === '<5k') return false
+  if (form.value.inversion === '<800') return false
   if (form.value.objetivo === 'viral') return false
   return true
 }
@@ -46,23 +46,27 @@ const handleSubmit = async () => {
   const contact = contactStore.get()
   const califica = qualifies()
 
+  const source = 'build-webpages'
+
   const etiquetas = [
     'funnel-bakano',
     'step-2-cualificacion',
+    `calificacion-lead-${source}`,
     califica ? 'califica' : 'no-califica',
-    `facturacion-${form.value.facturacion.replace(/[<>]/g, '')}`,
-    `ubicacion-${form.value.ubicacion}`,
+    `gestion-${form.value.gestion}`,
+    `inversion-${form.value.inversion}`,
     `objetivo-${form.value.objetivo}`,
   ]
 
-  const facturacionLabel: Record<string, string> = {
-    '<5k':    'Menos de $5,000 USD',
-    '5k-10k': 'Entre $5,000 y $10,000 USD',
-    '>10k':   'Más de $10,000 USD',
+  const gestionLabel: Record<string, string> = {
+    manual:       'Respondo manualmente por WhatsApp/chats',
+    equipo:       'Tengo un asistente o equipo que responde',
+    automatizado: 'Ya tengo automatizaciones',
   }
-  const ubicacionLabel: Record<string, string> = {
-    guayaquil: 'Guayaquil / Samborondón',
-    otra:      'Otra ciudad / extranjero',
+  const inversionLabel: Record<string, string> = {
+    '<800':  'Menos de $800 USD',
+    '800-2k': 'Entre $800 y $2,000 USD',
+    '>2k':   'Más de $2,000 USD',
   }
   const objetivoLabel: Record<string, string> = {
     viral:       'Aumentar seguidores y hacerse viral',
@@ -77,8 +81,8 @@ const handleSubmit = async () => {
 📧 ${contact.email}
 📱 ${contact.telefono}
 ━━━━━━━━━━━━━━━━━━━━━━━━
-💰 Facturación: ${facturacionLabel[form.value.facturacion] ?? form.value.facturacion}
-📍 Ubicación: ${ubicacionLabel[form.value.ubicacion] ?? form.value.ubicacion}
+💬 Gestión: ${gestionLabel[form.value.gestion] ?? form.value.gestion}
+💵 Inversión: ${inversionLabel[form.value.inversion] ?? form.value.inversion}
 🎯 Objetivo: ${objetivoLabel[form.value.objetivo] ?? form.value.objetivo}
 💡 Mejora: ${form.value.mejora}
 ━━━━━━━━━━━━━━━━━━━━━━━━
@@ -92,13 +96,14 @@ const handleSubmit = async () => {
     negocio: contact.negocio,
     email: contact.email,
     telefono: contact.telefono,
-    facturacion: form.value.facturacion,
-    ubicacion: form.value.ubicacion,
+    gestion: form.value.gestion,
+    inversion: form.value.inversion,
     objetivo: form.value.objetivo,
     mejora: form.value.mejora,
     califica,
     resultado: califica ? 'AGENDA' : 'RECHAZADO',
     etiquetas,
+    source,
     nota,
     timestamp: new Date().toISOString(),
     ...getStoredFbParams(),
@@ -110,7 +115,7 @@ const handleSubmit = async () => {
   // Reemplazar el event_id temporal de la nota con el real
   const finalPayload = { ...payload, nota: payload.nota.replace(/schedule_\d+_bk/, scheduleEventId), event_id: scheduleEventId }
 
-  await fetch('https://services.leadconnectorhq.com/hooks/pEFChujwCCaMWBNbZYD1/webhook-trigger/69dc0e5f-e2c0-4e9f-9625-10a708787d59', {
+  await fetch(import.meta.env.VITE_GHL_CALIFICACION_WEBHOOK, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(finalPayload),
@@ -145,7 +150,7 @@ const onKeydown = (e: KeyboardEvent) => { if (e.key === 'Escape') emit('close') 
 onMounted(() => document.addEventListener('keydown', onKeydown))
 onUnmounted(() => document.removeEventListener('keydown', onKeydown))
 
-watch(() => props.open, (v) => { if (v) { touched.value = false; form.value = { facturacion: '', ubicacion: '', objetivo: '', mejora: '', consent: false } } })
+watch(() => props.open, (v) => { if (v) { touched.value = false; form.value = { gestion: '', inversion: '', objetivo: '', mejora: '', consent: false } } })
 </script>
 
 <template>
@@ -161,52 +166,53 @@ watch(() => props.open, (v) => { if (v) { touched.value = false; form.value = { 
           </button>
 
           <!-- ── CALIFICACIÓN ──────────────────────────────── -->
-          <p class="cal-eyebrow">Paso final</p>
+          <p class="cal-eyebrow">Calificación</p>
             <h2 id="cal-title" class="cal-title">
-              Cuéntanos sobre<br>
-              <span class="cal-accent">tu negocio</span>
+              ¿Eres el perfil ideal para<br>
+              <span class="cal-accent">nuestro sistema?</span>
             </h2>
-            <p class="cal-subtitle">4 preguntas rápidas para asignarte al miembro del equipo ideal — 60 segundos.</p>
+            <p class="cal-subtitle">4 preguntas rápidas para saber si nuestro sistema de ventas automáticas es para ti — 60 segundos.</p>
 
             <form class="cal-form" @submit.prevent="handleSubmit" novalidate>
 
               <!-- Q1 -->
-              <fieldset class="cal-fieldset" :class="{ 'has-error': touched && !form.facturacion }">
+              <fieldset class="cal-fieldset" :class="{ 'has-error': touched && !form.gestion }">
                 <legend class="cal-legend">
                   <span class="cal-q-num">01</span>
-                  ¿Cuál es tu facturación mensual actual?
+                  ¿Cómo gestionas las conversaciones de tus clientes hoy?
                 </legend>
                 <div class="cal-options">
                   <label v-for="opt in [
-                    { value: '<5k', label: 'Menos de $5,000 USD' },
-                    { value: '5k-10k', label: 'Entre $5,000 y $10,000 USD' },
-                    { value: '>10k', label: 'Más de $10,000 USD' },
-                  ]" :key="opt.value" class="cal-option" :class="{ selected: form.facturacion === opt.value }">
-                    <input type="radio" :value="opt.value" v-model="form.facturacion" hidden />
+                    { value: 'manual', label: 'Respondo manualmente por WhatsApp/chats' },
+                    { value: 'equipo', label: 'Tengo un asistente o equipo que responde' },
+                    { value: 'automatizado', label: 'Ya tengo un sistema automatizado' },
+                  ]" :key="opt.value" class="cal-option" :class="{ selected: form.gestion === opt.value }">
+                    <input type="radio" :value="opt.value" v-model="form.gestion" hidden />
                     <span class="cal-option__radio" aria-hidden="true" />
                     <span class="cal-option__label">{{ opt.label }}</span>
                   </label>
                 </div>
-                <span v-if="touched && !form.facturacion" class="cal-error">Selecciona una opción</span>
+                <span v-if="touched && !form.gestion" class="cal-error">Selecciona una opción</span>
               </fieldset>
 
               <!-- Q2 -->
-              <fieldset class="cal-fieldset" :class="{ 'has-error': touched && !form.ubicacion }">
+              <fieldset class="cal-fieldset" :class="{ 'has-error': touched && !form.inversion }">
                 <legend class="cal-legend">
                   <span class="cal-q-num">02</span>
-                  ¿Dónde está tu base de operaciones?
+                  ¿Cuál es tu presupuesto de inversión para este proyecto?
                 </legend>
                 <div class="cal-options">
                   <label v-for="opt in [
-                    { value: 'guayaquil', label: 'Guayaquil / Samborondón' },
-                    { value: 'otra', label: 'Otra ciudad de Ecuador o el extranjero' },
-                  ]" :key="opt.value" class="cal-option" :class="{ selected: form.ubicacion === opt.value }">
-                    <input type="radio" :value="opt.value" v-model="form.ubicacion" hidden />
+                    { value: '<800', label: 'Menos de $800 USD' },
+                    { value: '800-2k', label: 'Entre $800 y $2,000 USD' },
+                    { value: '>2k', label: 'Más de $2,000 USD' },
+                  ]" :key="opt.value" class="cal-option" :class="{ selected: form.inversion === opt.value }">
+                    <input type="radio" :value="opt.value" v-model="form.inversion" hidden />
                     <span class="cal-option__radio" aria-hidden="true" />
                     <span class="cal-option__label">{{ opt.label }}</span>
                   </label>
                 </div>
-                <span v-if="touched && !form.ubicacion" class="cal-error">Selecciona una opción</span>
+                <span v-if="touched && !form.inversion" class="cal-error">Selecciona una opción</span>
               </fieldset>
 
               <!-- Q3 -->
@@ -281,7 +287,7 @@ watch(() => props.open, (v) => { if (v) { touched.value = false; form.value = { 
                     <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
                   </svg>
                 </template>
-                {{ submitting ? 'Verificando...' : 'CONFIRMAR Y VER DISPONIBILIDAD' }}
+                {{ submitting ? 'Verificando...' : 'CONFIRMAR Y VER MI SISTEMA' }}
               </button>
 
             </form>

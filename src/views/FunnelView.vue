@@ -27,12 +27,12 @@ const stats = [
   {
     icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
     number: '+25',
-    text: 'negocios establecidos aumentaron su facturación más de un 20%',
+    text: 'negocios con su sistema de ventas automatizadas funcionando 24/7',
   },
   {
     icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
     number: '+$50K',
-    text: 'USD en ventas generadas para clientes con estrategia digital',
+    text: 'USD en ventas automatizadas generadas para nuestros clientes',
   },
   {
     icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h.5A2.5 2.5 0 0020.5 5.5V3.935',
@@ -42,10 +42,9 @@ const stats = [
 ]
 
 const pillars = [
-  'Sin depender de la suerte',
-  'Sin agencias de viralidad',
-  'Sin improvisación',
-  'Con estrategia data-driven',
+  'Diagnóstico de tu proceso de ventas',
+  'Ingeniería y desarrollo de tu plataforma web',
+  'Automatización y estandarización 24/7',
 ]
 
 // Countdown urgency timer (24h rolling)
@@ -85,7 +84,7 @@ onMounted(() => {
          ══════════════════════════════════════════════ -->
     <div class="funnel__urgency" role="banner">
       <span class="funnel__urgency-dot" aria-hidden="true" />
-      <span>Esta oferta expira en:</span>
+      <span>Cupos limitados — próxima revisión en:</span>
       <div class="funnel__timer" aria-live="polite" aria-label="Tiempo restante">
         <span class="funnel__timer-block">
           <strong>{{ hours }}</strong>
@@ -115,9 +114,9 @@ onMounted(() => {
 
         <!-- Headline -->
         <h1 id="funnel-headline" class="funnel__headline">
-          Ayudamos a dueños de negocios establecidos a
-          <span class="funnel__headline-accent">abrir su mercado y aumentar su facturación entre un 10% y 20%</span>
-          de forma predecible
+          Convertimos cada conversación de tu negocio en
+          <span class="funnel__headline-accent">ventas automáticas 24/7</span>
+          con un sistema web que trabaja por ti
         </h1>
 
         <!-- Sub-pillars -->
@@ -156,16 +155,15 @@ onMounted(() => {
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
             </svg>
-            REGISTRARME A LA ASESORÍA ¡AHORA!
+            QUIERO MI SISTEMA DE VENTAS ¡AHORA!
           </button>
           <p class="funnel__cta-sub">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
-            100% gratuito · Sin compromiso · Cupos limitados
+            Inversión desde $800 · Resultados comprobados · Cupos limitados
           </p>
         </div>
-
       </div>
     </section>
 
@@ -218,9 +216,9 @@ onMounted(() => {
           <h2 id="authority-heading" class="funnel__authority-name">Luis Reyes</h2>
           <p class="funnel__authority-role">CEO & Co-fundador de Bakano</p>
           <p class="funnel__authority-desc">
-            Luis Reyes ha dedicado su carrera a construir modelos de negocio escalables con tecnología y datos,
-            optimizando operaciones y aumentando ventas en empresas de múltiples industrias en
-            <strong>Ecuador, Colombia, Estados Unidos y Singapur</strong>.
+            Luis Reyes ha dedicado su carrera a construir sistemas web de ventas automatizadas y modelos de negocio escalables con tecnología y datos,
+            eliminando la fricción del proceso de compra para que los dueños de negocio dejen de perseguir clientes
+            y empiecen a recibir notificaciones de ventas automáticas en <strong>Ecuador, Colombia, Estados Unidos y Singapur</strong>.
           </p>
 
           <ul class="funnel__authority-achievements" role="list">
@@ -230,7 +228,7 @@ onMounted(() => {
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
               </span>
-              <span>Ha ayudado a <strong>más de 25 negocios establecidos</strong> en Latinoamérica a aumentar su facturación en más de un 20% sin depender de videos virales</span>
+              <span>Ha ayudado a <strong>más de 25 negocios establecidos</strong> en Latinoamérica a automatizar sus ventas y escalar sus ingresos sin depender de viralidad</span>
             </li>
             <li class="funnel__authority-achievement">
               <span class="funnel__achievement-icon" aria-hidden="true">
@@ -269,12 +267,12 @@ onMounted(() => {
         />
 
         <h2 class="funnel__second-cta-title">
-          ¿Listo para profesionalizar<br>
-          <span class="funnel__headline-accent">tu marketing y ventas?</span>
+          ¿Listo para tener un<br>
+          <span class="funnel__headline-accent">sistema de ventas 24/7?</span>
         </h2>
         <p class="funnel__second-cta-sub">
-          Agenda tu asesoría gratuita y descubre cómo la metodología Data Growth Business
-          puede aumentar tu facturación de forma predecible.
+          Descubre nuestro sistema web de alto valor que automatiza tus conversaciones
+          y las convierte en ventas predecibles todos los días.
         </p>
 
         <div class="funnel__cta-wrap">
@@ -282,13 +280,13 @@ onMounted(() => {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>
             </svg>
-            REGISTRARME A LA ASESORÍA ¡AHORA!
+            QUIERO MI SISTEMA DE VENTAS ¡AHORA!
           </button>
           <p class="funnel__cta-sub">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/>
             </svg>
-            100% gratuito · Sin compromiso · Cupos limitados
+            Inversión desde $800 · Resultados comprobados · Cupos limitados
           </p>
         </div>
       </div>
